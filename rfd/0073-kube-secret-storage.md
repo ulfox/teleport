@@ -102,6 +102,7 @@ Where:
 - `tls_cert` is a PEM encoded x509 client certificate.
 - `tls_ca_certs` is a list of PEM encoded x509 certificate of the certificate authority of the cluster.
 - `ssh_ca_certs` is a list of SSH certificate authorities encoded in the authorized_keys format.
+- `role` is the role the agent is operating. If agent is running with multiple roles, i.e. app, kube..., multiple entries will be added, one for each role.
 - `TELEPORT_REPLICA_NAME` is the teleport agent replica name. Constant when using Deployments, `TELEPORT_REPLICA_NAME={{ .Release.Name}}` or dynamic when using Statefulsets, `TELEPORT_REPLICA_NAME=metadata.name`.
 
 #### RBAC Changes
@@ -135,7 +136,7 @@ If secret storage is enabled, the Teleport agent initializes with Kubernetes sec
 | core cluster state | Cluster configuration (e.g. users, roles, auth connectors) and identity (e.g. certificate authorities, registered nodes, trusted clusters). | Local directory (SQLite), etcd, AWS DynamoDB, GCP Firestore, self-hosted PostgreSQL/CockroachDB (Preview) |
 | audit events | JSON-encoded events from the audit log (e.g. user logins, RBAC changes) | Local directory, AWS DynamoDB, GCP Firestore |
 | session recordings | Raw terminal recordings of interactive user sessions | Local directory, AWS S3 (and any S3-compatible product), GCP Cloud Storage |
-| teleport instance state | ID and credentials of a non-auth teleport instance (e.g. node, proxy, kube) | Local directory, Kube Secret (only available when running in kube) |
+| teleport instance state | ID and credentials of a non-auth teleport instance (e.g. node, proxy, kube) | Local directory or Kube Secret if running in kube |
 
 The storage backend will be responsible for managing the Kubernetes secret, i.e. reading and updating its contents, in order to create a transparent storage backend.
 
@@ -269,7 +270,7 @@ If the agent detects that it is running in Kubernetes, it instantiates a backend
 
 For a compatibility layer, if the secret does not exist in Kubernetes, but locally we have the SQLite database, this means storage is enabled, and the agent had already joined the cluster in the past. Hereby, the agent can inherit the credentials stored in the database and write them in Kubernetes secret, destroying the SQLite after ([more details](#upgrade-plans-from-pre-rfd-to-pos-rfd)).
 
-The storage must also store the events of type `kind=state` since they are used as help during the CA rotation phase. They are helpful if the pod restarts, and has to rollback to the previous identity or finish the process and replace the old identity with the new one.
+The storage must also store the events of type `kind=state` since they are used during the CA rotation phase. They are helpful if the pod restarts, and has to rollback to the previous identity or finish the process and replace the old identity with the new one.
 
 ### CA Rotation
 
