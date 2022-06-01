@@ -26,6 +26,15 @@
               "slug": "/getting-started/docker-compose/"
             },
             {
+              "title": "Local Kubernetes Lab",
+              "slug": "/getting-started/local-kubernetes/"
+            },
+            {
+              "title": "Kubernetes Cluster",
+              "slug": "/getting-started/kubernetes-cluster/",
+              "hideInScopes": "cloud"
+            },
+            {
               "title": "DigitalOcean",
               "slug": "/getting-started/digitalocean/",
               "hideInScopes": ["enterprise", "cloud"]
@@ -1206,6 +1215,21 @@
     {
       "source": "/cluster/",
       "destination": "/kubernetes-access/guides/multiple-clusters/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/kubernetes-access/getting-started/agent/",
+      "destination": "/docs/kubernetes-access/getting-started/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/kubernetes-access/getting-started/cluster/",
+      "destination": "/docs/getting-started/kubernetes-cluster/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/kubernetes-access/getting-started/local/",
+      "destination": "/docs/getting-started/local-kubernetes/",
       "permanent": true
     }
   ]
