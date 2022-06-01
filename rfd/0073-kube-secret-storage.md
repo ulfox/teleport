@@ -129,7 +129,7 @@ The RBAC only allows the service account to read and update the secrets listed u
 
 #### Kube Secret as storage backend
 
-If secret storage is enabled, the Teleport agent initializes with Kubernetes secret [backend storage](https://goteleport.com/docs/setup/reference/backends/). The backend storage availability for Teleport will be the following:
+If running in Kubernetes, the Teleport agent initializes with Kubernetes secret [backend storage](https://goteleport.com/docs/setup/reference/backends/). The backend storage availability for Teleport will be the following:
 
 | Data type | Description | Supported storage backends |
 |---|---|---|
@@ -142,7 +142,7 @@ The storage backend will be responsible for managing the Kubernetes secret, i.e.
 
 If the identity secret exists in Kubernetes and has the node identity on it, the storage engine will parse and return the keys to the Agent, so it can use them to authenticate in the Teleport Cluster. If the cluster access operation is successful, the agent will be available for usage, but if the access operation fails because the Teleport Auth does not validate the node credentials, the Agent will log an error providing insightful information about the failure cause.
 
-In case of the identity secret does not exist or is empty, the agent will try to join the cluster with the invite token provided. If the invite token is valid (has details in the Teleport Cluster and did not expire yet), Teleport Cluster will reply with the agent identity. Given the identity, the agent will write it in the secret `{{ .Release.Name }}-identity-{{$TELEPORT_REPLICA_NAME}}` for future usage.
+In case of the identity secret is not present or is empty, the agent will try to join the cluster with the invite token provided. If the invite token is valid (has details in the Teleport Cluster and did not expire yet), Teleport Cluster will reply with the agent identity. Given the identity, the agent will write it in the secret `{{ .Release.Name }}-identity-{{$TELEPORT_REPLICA_NAME}}` for future usage.
 
 Otherwise, if the invite token is not valid or has expired, the Agent could not join the cluster, and it will stop and log a meaningful error message.
 
@@ -264,7 +264,7 @@ type IdentityBackend interface {
 }
 ```
 
-During the startup procedure, the agent identifies that it is running inside Kubernetes. The identification can be achieved by checking the presence of the service account mount path `/var/run/secrets/kubernetes.io`. Although Kubernetes has an option that can disable this mount path, `automountServiceAccountToken: false`, this option is always enabled in our helm chart since we require it for handling the secrets.
+During the startup procedure, the agent identifies that it is running inside Kubernetes. The identification can be achieved by checking the presence of the service account mount path `/var/run/secrets/kubernetes.io`. Although Kubernetes has an option that can disable this mount path, `automountServiceAccountToken: false`, this option is always `true` in our helm chart since we require it for handling the secrets.
 
 If the agent detects that it is running in Kubernetes, it instantiates a backend for Kubernetes Secret. This backend creates a client with configuration provided by `restclient.InClusterConfig()`, which uses the service account token mounted in the pod. With this, the agent can operate the secret by creating, updating, and reading the secret data. To prevent multiple agents from racing each other when writing in the secret, the Kubernetes Storage engine might use the resource lock feature from Kubernetes (`resourceVersion`) to implement optimistic locking.
 
