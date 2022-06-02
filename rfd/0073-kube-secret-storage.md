@@ -91,7 +91,7 @@ data: |
     
 kind: Secret
 metadata:
-  name: {.Release.Name}-identity-{{$TELEPORT_REPLICA_NAME}}
+  name: {.Release.Name}-state-{{$TELEPORT_REPLICA_NAME}}
   namespace: {.Release.Namespace}
 ```
 
