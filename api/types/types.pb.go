@@ -9490,6 +9490,97 @@ func (m *Participant) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_Participant proto.InternalMessageInfo
 
+type InstallerV1 struct {
+	// Kind is the resource kind.
+	Kind string `protobuf:"bytes,1,opt,name=Kind,proto3" json:"kind"`
+	// SubKind is an optional resource subkind. Currently unused for this resource.
+	SubKind string `protobuf:"bytes,2,opt,name=SubKind,proto3" json:"sub_kind,omitempty"`
+	// Version is the resource version.
+	Version string `protobuf:"bytes,3,opt,name=Version,proto3" json:"version"`
+	// Metadata is the resource metadata.
+	Metadata Metadata `protobuf:"bytes,4,opt,name=Metadata,proto3" json:"metadata"`
+	// Spec is the resource spec.
+	Spec                 InstallerSpecV1 `protobuf:"bytes,5,opt,name=Spec,proto3" json:"spec"`
+	XXX_NoUnkeyedLiteral struct{}        `json:"-"`
+	XXX_unrecognized     []byte          `json:"-"`
+	XXX_sizecache        int32           `json:"-"`
+}
+
+func (m *InstallerV1) Reset()         { *m = InstallerV1{} }
+func (m *InstallerV1) String() string { return proto.CompactTextString(m) }
+func (*InstallerV1) ProtoMessage()    {}
+func (*InstallerV1) Descriptor() ([]byte, []int) {
+	return fileDescriptor_d938547f84707355, []int{180}
+}
+func (m *InstallerV1) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *InstallerV1) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_InstallerV1.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *InstallerV1) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_InstallerV1.Merge(m, src)
+}
+func (m *InstallerV1) XXX_Size() int {
+	return m.Size()
+}
+func (m *InstallerV1) XXX_DiscardUnknown() {
+	xxx_messageInfo_InstallerV1.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_InstallerV1 proto.InternalMessageInfo
+
+// InstallerSpecV1 is the specification for an Installer
+type InstallerSpecV1 struct {
+	// Script represents the contents of a installer shell script
+	Script               string   `protobuf:"bytes,1,opt,name=Script,proto3" json:"script"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *InstallerSpecV1) Reset()         { *m = InstallerSpecV1{} }
+func (m *InstallerSpecV1) String() string { return proto.CompactTextString(m) }
+func (*InstallerSpecV1) ProtoMessage()    {}
+func (*InstallerSpecV1) Descriptor() ([]byte, []int) {
+	return fileDescriptor_d938547f84707355, []int{181}
+}
+func (m *InstallerSpecV1) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *InstallerSpecV1) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_InstallerSpecV1.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *InstallerSpecV1) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_InstallerSpecV1.Merge(m, src)
+}
+func (m *InstallerSpecV1) XXX_Size() int {
+	return m.Size()
+}
+func (m *InstallerSpecV1) XXX_DiscardUnknown() {
+	xxx_messageInfo_InstallerSpecV1.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_InstallerSpecV1 proto.InternalMessageInfo
+
 // SortBy defines a sort criteria.
 type SortBy struct {
 	// IsDesc is a sort direction flag where if true the direction is descending, else ascending.
@@ -9505,7 +9596,7 @@ func (m *SortBy) Reset()         { *m = SortBy{} }
 func (m *SortBy) String() string { return proto.CompactTextString(m) }
 func (*SortBy) ProtoMessage()    {}
 func (*SortBy) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d938547f84707355, []int{180}
+	return fileDescriptor_d938547f84707355, []int{182}
 }
 func (m *SortBy) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -9741,13 +9832,15 @@ func init() {
 	proto.RegisterType((*SessionTrackerSpecV1)(nil), "types.SessionTrackerSpecV1")
 	proto.RegisterType((*SessionTrackerPolicySet)(nil), "types.SessionTrackerPolicySet")
 	proto.RegisterType((*Participant)(nil), "types.Participant")
+	proto.RegisterType((*InstallerV1)(nil), "types.InstallerV1")
+	proto.RegisterType((*InstallerSpecV1)(nil), "types.InstallerSpecV1")
 	proto.RegisterType((*SortBy)(nil), "types.SortBy")
 }
 
 func init() { proto.RegisterFile("types.proto", fileDescriptor_d938547f84707355) }
 
 var fileDescriptor_d938547f84707355 = []byte{
-	// 13233 bytes of a gzipped FileDescriptorProto
+	// 13274 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xdc, 0xbd, 0x6f, 0x6c, 0x1c, 0x49,
 	0x76, 0x18, 0xae, 0x9e, 0x19, 0x92, 0xc3, 0xc7, 0x21, 0x39, 0x2c, 0x52, 0x12, 0xa5, 0xd5, 0xee,
 	0x68, 0x7b, 0x77, 0xb5, 0x5a, 0xed, 0xae, 0x74, 0xa2, 0x6e, 0x75, 0xde, 0xdb, 0x7f, 0x37, 0x43,
@@ -10547,35 +10640,37 @@ var fileDescriptor_d938547f84707355 = []byte{
 	0x8d, 0xb3, 0xb3, 0x3a, 0xe7, 0x3f, 0xb1, 0xac, 0xce, 0xe6, 0xa1, 0x01, 0x63, 0x0a, 0x33, 0x3f,
 	0xc1, 0x07, 0x1b, 0xaf, 0x88, 0xe7, 0x0d, 0xf2, 0x09, 0x5e, 0x2b, 0x65, 0xaf, 0xc0, 0xe7, 0x0c,
 	0xbe, 0x0a, 0xb0, 0xec, 0x84, 0x51, 0xb5, 0x11, 0x79, 0x0f, 0xe9, 0x00, 0x92, 0x3b, 0xc9, 0xe5,
-	0xe6, 0xe0, 0xbb, 0x2f, 0xac, 0x5a, 0x4f, 0x2e, 0xb7, 0x98, 0xa0, 0xb9, 0x02, 0xc3, 0x75, 0x3f,
-	0x88, 0x6a, 0x07, 0x7c, 0x3b, 0x5e, 0xa0, 0x61, 0x43, 0xb5, 0x64, 0x7a, 0x68, 0xd3, 0x68, 0x58,
-	0xa2, 0x88, 0xe9, 0xc4, 0x77, 0x3c, 0xda, 0x74, 0x55, 0xcf, 0x88, 0x1d, 0x06, 0xb0, 0x38, 0xfc,
-	0xda, 0x7b, 0x30, 0x29, 0x19, 0x7b, 0x7d, 0xb9, 0x8e, 0x3d, 0x98, 0x84, 0xb1, 0xcd, 0x45, 0x6b,
-	0xe9, 0xce, 0x97, 0xec, 0x3b, 0x1b, 0xcb, 0xcb, 0xe5, 0x33, 0x64, 0x1c, 0x46, 0x05, 0x60, 0xbe,
-	0x5a, 0x36, 0x48, 0x09, 0x8a, 0x4b, 0x2b, 0xf5, 0xc5, 0xf9, 0x0d, 0x6b, 0xb1, 0x9c, 0xbb, 0xf6,
-	0x12, 0x4c, 0x24, 0xae, 0x71, 0x78, 0x89, 0x32, 0x02, 0x79, 0xab, 0xba, 0x55, 0x3e, 0x43, 0x00,
-	0x86, 0xd7, 0xee, 0xcf, 0xd7, 0x6f, 0xde, 0x2c, 0x1b, 0xd7, 0x3e, 0x03, 0x53, 0x78, 0x58, 0x5b,
-	0x66, 0xe7, 0x86, 0x36, 0x0d, 0xb0, 0xa5, 0x12, 0x14, 0xeb, 0xb4, 0xe3, 0x04, 0x4e, 0x44, 0x79,
-	0x33, 0x0f, 0xba, 0xcd, 0xc8, 0xeb, 0x34, 0xe9, 0xe3, 0xb2, 0x71, 0xed, 0x4d, 0x98, 0xb4, 0xfc,
-	0x6e, 0xe4, 0xb5, 0x77, 0xe5, 0x8b, 0x37, 0xe4, 0x2c, 0x4c, 0x6d, 0xac, 0x54, 0x1f, 0xd4, 0x96,
-	0xee, 0x6e, 0xac, 0x6e, 0xd4, 0xed, 0x07, 0xd5, 0xf5, 0xf9, 0x7b, 0xe5, 0x33, 0xec, 0x83, 0x1f,
-	0xac, 0xd6, 0xd7, 0x6d, 0x6b, 0x71, 0x7e, 0x71, 0x65, 0xbd, 0x6c, 0x5c, 0xfb, 0x05, 0x03, 0x26,
-	0xe2, 0x07, 0xf0, 0x37, 0xd0, 0x9a, 0x76, 0x19, 0x2e, 0x6d, 0xd4, 0x17, 0x2d, 0x7b, 0x7d, 0xf5,
-	0xfe, 0xe2, 0x8a, 0xbd, 0x51, 0xaf, 0xde, 0x5d, 0xb4, 0x37, 0x56, 0xea, 0x6b, 0x8b, 0xf3, 0x4b,
-	0x77, 0x96, 0x16, 0x17, 0xca, 0x67, 0x48, 0x05, 0x9e, 0x51, 0x30, 0xac, 0xc5, 0xf9, 0xd5, 0xcd,
-	0x45, 0xcb, 0x5e, 0xab, 0xd6, 0xeb, 0x5b, 0xab, 0xd6, 0x42, 0xd9, 0x20, 0x17, 0xe1, 0x5c, 0x06,
-	0xc2, 0x83, 0x3b, 0xd5, 0x72, 0xae, 0xa7, 0x6c, 0x65, 0x71, 0xab, 0xba, 0x6c, 0xd7, 0x56, 0xd7,
-	0xcb, 0xf9, 0x6b, 0xef, 0x31, 0xc5, 0x2b, 0x79, 0xd6, 0x93, 0x14, 0xa1, 0xb0, 0xb2, 0xba, 0xb2,
-	0x58, 0x3e, 0x43, 0xc6, 0x60, 0x64, 0x6d, 0x71, 0x65, 0x61, 0x69, 0xe5, 0x2e, 0x1f, 0xd6, 0xea,
-	0xda, 0x9a, 0xb5, 0xba, 0xb9, 0xb8, 0x50, 0xce, 0xb1, 0xb1, 0x5b, 0x58, 0x5c, 0x61, 0x5f, 0x96,
-	0xbf, 0x66, 0xf2, 0x17, 0xa5, 0xb4, 0x67, 0x34, 0xd8, 0x68, 0x2d, 0x7e, 0x71, 0x7d, 0x71, 0xa5,
-	0xbe, 0xb4, 0xba, 0x52, 0x3e, 0x73, 0xed, 0x52, 0x0a, 0x47, 0xce, 0x44, 0xbd, 0x7e, 0xaf, 0x7c,
-	0xe6, 0xda, 0x57, 0xa0, 0xa4, 0xea, 0x1d, 0xe4, 0x3c, 0x4c, 0xab, 0xbf, 0xd7, 0x68, 0xdb, 0xf5,
-	0xda, 0xbb, 0xe5, 0x33, 0xe9, 0x02, 0xab, 0xdb, 0x6e, 0xb3, 0x02, 0xec, 0xbc, 0x5a, 0xb0, 0x4e,
-	0x83, 0x96, 0xd7, 0x66, 0x2a, 0x45, 0x39, 0x57, 0x2b, 0x7f, 0xef, 0x4f, 0x9f, 0x3b, 0xf3, 0xbd,
-	0x1f, 0x3c, 0x67, 0xfc, 0xc9, 0x0f, 0x9e, 0x33, 0xfe, 0xfb, 0x0f, 0x9e, 0x33, 0xb6, 0x87, 0x91,
-	0xd1, 0x6f, 0xfd, 0xdf, 0x00, 0x00, 0x00, 0xff, 0xff, 0x63, 0x00, 0x35, 0x9c, 0xad, 0xcd, 0x00,
-	0x00,
+	0xe6, 0xe0, 0xbb, 0x2f, 0xac, 0x5a, 0x4f, 0x2e, 0xb7, 0x98, 0xa0, 0xf9, 0x97, 0x06, 0x8c, 0x2d,
+	0xb5, 0xc3, 0xc8, 0x69, 0x36, 0x71, 0x6b, 0xfd, 0x34, 0x45, 0xed, 0xc7, 0xfd, 0x3a, 0x66, 0x3b,
+	0x7f, 0x03, 0x26, 0x53, 0x68, 0xec, 0xc8, 0x51, 0x47, 0x6f, 0x4e, 0xf5, 0xc8, 0xc1, 0xfd, 0x3b,
+	0x2d, 0x51, 0x62, 0xae, 0xc0, 0x70, 0xdd, 0x0f, 0xa2, 0xda, 0x01, 0xd7, 0x62, 0x16, 0x68, 0xd8,
+	0x50, 0x0d, 0xc0, 0x1e, 0x9a, 0x82, 0x1a, 0x96, 0x28, 0x62, 0x47, 0x89, 0x3b, 0x1e, 0x6d, 0xba,
+	0xaa, 0x43, 0xc9, 0x0e, 0x03, 0x58, 0x1c, 0x7e, 0xed, 0x3d, 0x98, 0x94, 0xf2, 0x60, 0x7d, 0xb9,
+	0x8e, 0x13, 0x3f, 0x09, 0x63, 0x9b, 0x8b, 0xd6, 0xd2, 0x9d, 0x2f, 0xd9, 0x77, 0x36, 0x96, 0x97,
+	0xcb, 0x67, 0xc8, 0x38, 0x8c, 0x0a, 0xc0, 0x7c, 0xb5, 0x6c, 0x90, 0x12, 0x14, 0x97, 0x56, 0xea,
+	0x8b, 0xf3, 0x1b, 0xd6, 0x62, 0x39, 0x77, 0xed, 0x25, 0x98, 0x48, 0x3c, 0x0a, 0xf1, 0xee, 0x69,
+	0x04, 0xf2, 0x56, 0x75, 0xab, 0x7c, 0x86, 0x00, 0x0c, 0xaf, 0xdd, 0x9f, 0xaf, 0xdf, 0xbc, 0x59,
+	0x36, 0xae, 0x7d, 0x06, 0xa6, 0xf0, 0x8c, 0xbb, 0xcc, 0x8e, 0x5b, 0x6d, 0x1a, 0x60, 0x4b, 0x25,
+	0x28, 0xd6, 0x69, 0xc7, 0x09, 0x9c, 0x88, 0xf2, 0x66, 0x1e, 0x74, 0x9b, 0x91, 0xd7, 0x69, 0xd2,
+	0xc7, 0x65, 0xe3, 0xda, 0x9b, 0x30, 0x69, 0xf9, 0xdd, 0xc8, 0x6b, 0xef, 0xca, 0x87, 0x82, 0xc8,
+	0x59, 0x98, 0xda, 0x58, 0xa9, 0x3e, 0xa8, 0x2d, 0xdd, 0xdd, 0x58, 0xdd, 0xa8, 0xdb, 0x0f, 0xaa,
+	0xeb, 0xf3, 0xf7, 0xca, 0x67, 0xd8, 0x07, 0x3f, 0x58, 0xad, 0xaf, 0xdb, 0xd6, 0xe2, 0xfc, 0xe2,
+	0xca, 0x7a, 0xd9, 0xb8, 0xf6, 0x0b, 0x06, 0x4c, 0x30, 0x5e, 0xc7, 0xd3, 0xd2, 0x06, 0x1a, 0x21,
+	0x2f, 0xc3, 0xa5, 0x8d, 0xfa, 0xa2, 0x65, 0xaf, 0xaf, 0xde, 0x5f, 0x5c, 0xb1, 0x37, 0xea, 0xd5,
+	0xbb, 0x8b, 0xf6, 0xc6, 0x4a, 0x7d, 0x6d, 0x71, 0x7e, 0xe9, 0xce, 0xd2, 0xe2, 0x42, 0xf9, 0x0c,
+	0xa9, 0xc0, 0x33, 0x0a, 0x86, 0xb5, 0x38, 0xbf, 0xba, 0xb9, 0x68, 0xd9, 0x6b, 0xd5, 0x7a, 0x7d,
+	0x6b, 0xd5, 0x5a, 0x28, 0x1b, 0xe4, 0x22, 0x9c, 0xcb, 0x40, 0x78, 0x70, 0xa7, 0x5a, 0xce, 0xf5,
+	0x94, 0xad, 0x2c, 0x6e, 0x55, 0x97, 0xed, 0xda, 0xea, 0x7a, 0x39, 0x7f, 0xed, 0x3d, 0xa6, 0xaf,
+	0x26, 0xaf, 0xa1, 0x92, 0x22, 0x14, 0x56, 0x56, 0x57, 0x16, 0xcb, 0x67, 0xc8, 0x18, 0x8c, 0xac,
+	0x2d, 0xae, 0x2c, 0x2c, 0xad, 0xdc, 0xe5, 0xc3, 0x5a, 0x5d, 0x5b, 0xb3, 0x56, 0x37, 0x17, 0x17,
+	0xca, 0x39, 0x36, 0x76, 0x0b, 0x8b, 0x2b, 0xec, 0xcb, 0xf2, 0xd7, 0x4c, 0xfe, 0x10, 0x97, 0xf6,
+	0xfa, 0x08, 0x1b, 0xad, 0xc5, 0x2f, 0xae, 0x2f, 0xae, 0xd4, 0x97, 0x56, 0x57, 0xca, 0x67, 0xae,
+	0x5d, 0x4a, 0xe1, 0xc8, 0x99, 0xa8, 0xd7, 0xef, 0x95, 0xcf, 0x5c, 0xfb, 0x0a, 0x94, 0x54, 0x75,
+	0x8d, 0x9c, 0x87, 0x69, 0xf5, 0xf7, 0x1a, 0x6d, 0xbb, 0x5e, 0x7b, 0xb7, 0x7c, 0x26, 0x5d, 0x60,
+	0x75, 0xdb, 0x6d, 0x56, 0x80, 0x9d, 0x57, 0x0b, 0xd6, 0x69, 0xd0, 0xf2, 0xda, 0x4c, 0x13, 0x2b,
+	0xe7, 0x6a, 0xe5, 0xef, 0xfd, 0xe9, 0x73, 0x67, 0xbe, 0xf7, 0x83, 0xe7, 0x8c, 0x3f, 0xf9, 0xc1,
+	0x73, 0xc6, 0x7f, 0xff, 0xc1, 0x73, 0xc6, 0xf6, 0x30, 0xca, 0x87, 0x5b, 0xff, 0x37, 0x00, 0x00,
+	0xff, 0xff, 0x45, 0x90, 0x25, 0xe9, 0xe4, 0xce, 0x00, 0x00,
 }
 
 func (m *KeepAlive) Marshal() (dAtA []byte, err error) {
@@ -22295,6 +22390,108 @@ func (m *Participant) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *InstallerV1) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *InstallerV1) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *InstallerV1) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.XXX_unrecognized != nil {
+		i -= len(m.XXX_unrecognized)
+		copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	{
+		size, err := m.Spec.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintTypes(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x2a
+	{
+		size, err := m.Metadata.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintTypes(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x22
+	if len(m.Version) > 0 {
+		i -= len(m.Version)
+		copy(dAtA[i:], m.Version)
+		i = encodeVarintTypes(dAtA, i, uint64(len(m.Version)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.SubKind) > 0 {
+		i -= len(m.SubKind)
+		copy(dAtA[i:], m.SubKind)
+		i = encodeVarintTypes(dAtA, i, uint64(len(m.SubKind)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Kind) > 0 {
+		i -= len(m.Kind)
+		copy(dAtA[i:], m.Kind)
+		i = encodeVarintTypes(dAtA, i, uint64(len(m.Kind)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *InstallerSpecV1) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *InstallerSpecV1) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *InstallerSpecV1) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.XXX_unrecognized != nil {
+		i -= len(m.XXX_unrecognized)
+		copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	if len(m.Script) > 0 {
+		i -= len(m.Script)
+		copy(dAtA[i:], m.Script)
+		i = encodeVarintTypes(dAtA, i, uint64(len(m.Script)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
 func (m *SortBy) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -27593,6 +27790,50 @@ func (m *Participant) Size() (n int) {
 	}
 	l = github_com_gogo_protobuf_types.SizeOfStdTime(m.LastActive)
 	n += 1 + l + sovTypes(uint64(l))
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *InstallerV1) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Kind)
+	if l > 0 {
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	l = len(m.SubKind)
+	if l > 0 {
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	l = len(m.Version)
+	if l > 0 {
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	l = m.Metadata.Size()
+	n += 1 + l + sovTypes(uint64(l))
+	l = m.Spec.Size()
+	n += 1 + l + sovTypes(uint64(l))
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *InstallerSpecV1) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Script)
+	if l > 0 {
+		n += 1 + l + sovTypes(uint64(l))
+	}
 	if m.XXX_unrecognized != nil {
 		n += len(m.XXX_unrecognized)
 	}
@@ -62753,6 +62994,302 @@ func (m *Participant) Unmarshal(dAtA []byte) error {
 			if err := github_com_gogo_protobuf_types.StdTimeUnmarshal(&m.LastActive, dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTypes(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *InstallerV1) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTypes
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: InstallerV1: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: InstallerV1: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Kind", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Kind = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SubKind", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.SubKind = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Version", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Version = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Metadata", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Metadata.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Spec", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Spec.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTypes(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *InstallerSpecV1) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTypes
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: InstallerSpecV1: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: InstallerSpecV1: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Script", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Script = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
