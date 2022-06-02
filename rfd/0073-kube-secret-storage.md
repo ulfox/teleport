@@ -107,7 +107,7 @@ Where:
 
 #### RBAC Changes
 
-The Teleport agent service account must be able to create, read and update secrets within the namespace, therefore, one must create a new namespace role and attach it to the agent service account with the following content:
+The Teleport agent service account must be able to create, read and update secrets within the namespace, therefore, Helm must create a new namespace role and attach it to the agent service account with the following content:
 
 ```yaml
 - apiGroups: [""]
@@ -118,7 +118,7 @@ The Teleport agent service account must be able to create, read and update secre
   # objects is "secrets"
   resources: ["secrets"]
   resourcesNames: 
-  - "{.Release.Name}-identity-{{$TELEPORT_REPLICA_NAME}}" # initial secrets
+  - "{.Release.Name}-state-{{$TELEPORT_REPLICA_NAME}}" # initial secrets
   - ... # other identities if # replicas is higher than 1
   verbs: ["get", "update","watch", "list"]
 ```
@@ -129,20 +129,13 @@ The RBAC only allows the service account to read and update the secrets listed u
 
 #### Kube Secret as storage backend
 
-If running in Kubernetes, the Teleport agent initializes with Kubernetes secret [backend storage](https://goteleport.com/docs/setup/reference/backends/). The backend storage availability for Teleport will be the following:
+Teleport will automatically detect when it's running in Kubernetes and use Secrets to store the process state. Auth server data, audit events and session recording will be unaffected and keep using their configured backends.
 
-| Data type | Description | Supported storage backends |
-|---|---|---|
-| core cluster state | Cluster configuration (e.g. users, roles, auth connectors) and identity (e.g. certificate authorities, registered nodes, trusted clusters). | Local directory (SQLite), etcd, AWS DynamoDB, GCP Firestore, self-hosted PostgreSQL/CockroachDB (Preview) |
-| audit events | JSON-encoded events from the audit log (e.g. user logins, RBAC changes) | Local directory, AWS DynamoDB, GCP Firestore |
-| session recordings | Raw terminal recordings of interactive user sessions | Local directory, AWS S3 (and any S3-compatible product), GCP Cloud Storage |
-| teleport instance state | ID and credentials of a non-auth teleport instance (e.g. node, proxy, kube) | Local directory or Kube Secret if running in kube |
-
-The storage backend will be responsible for managing the Kubernetes secret, i.e. reading and updating its contents, in order to create a transparent storage backend.
+The Kubernetes Secret backend storage is responsible for managing the Kubernetes secret, i.e. creating the secret if it does not exist, reading and updating it.
 
 If the identity secret exists in Kubernetes and has the node identity on it, the storage engine will parse and return the keys to the Agent, so it can use them to authenticate in the Teleport Cluster. If the cluster access operation is successful, the agent will be available for usage, but if the access operation fails because the Teleport Auth does not validate the node credentials, the Agent will log an error providing insightful information about the failure cause.
 
-In case of the identity secret is not present or is empty, the agent will try to join the cluster with the invite token provided. If the invite token is valid (has details in the Teleport Cluster and did not expire yet), Teleport Cluster will reply with the agent identity. Given the identity, the agent will write it in the secret `{{ .Release.Name }}-identity-{{$TELEPORT_REPLICA_NAME}}` for future usage.
+In case of the identity secret is not present or is empty, the agent will try to join the cluster with the invite token provided. If the invite token is valid (has details in the Teleport Cluster and did not expire yet), Teleport Cluster will reply with the agent identity. Given the identity, the agent will write it in the secret `{{ .Release.Name }}-state-{{$TELEPORT_REPLICA_NAME}}` for future usage.
 
 Otherwise, if the invite token is not valid or has expired, the Agent could not join the cluster, and it will stop and log a meaningful error message.
 
@@ -268,17 +261,19 @@ During the startup procedure, the agent identifies that it is running inside Kub
 
 If the agent detects that it is running in Kubernetes, it instantiates a backend for Kubernetes Secret. This backend creates a client with configuration provided by `restclient.InClusterConfig()`, which uses the service account token mounted in the pod. With this, the agent can operate the secret by creating, updating, and reading the secret data. To prevent multiple agents from racing each other when writing in the secret, the Kubernetes Storage engine might use the resource lock feature from Kubernetes (`resourceVersion`) to implement optimistic locking.
 
-For a compatibility layer, if the secret does not exist in Kubernetes, but locally we have the SQLite database, this means storage is enabled, and the agent had already joined the cluster in the past. Hereby, the agent can inherit the credentials stored in the database and write them in Kubernetes secret, destroying the SQLite after ([more details](#upgrade-plans-from-pre-rfd-to-pos-rfd)).
+For a compatibility layer, if the secret does not exist in Kubernetes, but locally we have the SQLite database, this means storage is enabled, and the agent had already joined the cluster in the past. Hereby, the agent can inherit the credentials stored in the database and write them in Kubernetes secret ([more details](#upgrade-plans-from-pre-rfd-to-pos-rfd)).
 
 The storage must also store the events of type `kind=state` since they are used during the CA rotation phase. They are helpful if the pod restarts, and has to rollback to the previous identity or finish the process and replace the old identity with the new one.
 
 ### CA Rotation
 
-CA rotation feature allows the cluster operator to force the cluster to recreate and re-issue certificates for users and agents. During this procedure, agents and users receive the new keys signed by the newest CA from Teleport Auth.
+CA rotation feature allows the cluster operator to force the cluster to recreate and re-issue certificates for users and agents.
 
-While the cluster is transitioning, the keys signed by the old CA are considered valid in order for the agent to be able to receive its new identity certificates from Teleport Auth. During the whole process, the CA rotation can be rollbacked, and if this happens the new certificate becomes invalid. This action can happen because another agent has issues or by decision of the operator. Given this, the new identity keys and old identity keys must be stored separately in the Secret until the rotation process finishes successfully.
+The CA rotation process is independent of the agent role and storage and has the following behavior: during the procedure, agents and users receive new keys signed by the newest CA from Teleport Auth. While the cluster is transitioning, the keys signed by the old CA are considered valid in order for the agent to be able to receive its new identity certificates from Teleport Auth. During the whole process, the CA rotation can be rollbacked, and if this happens the new certificate becomes invalid. This action can happen because another agent has issues or by decision of the operator. Given this, the new identity keys and old identity keys are stored separately in the process storage until the rotation process finishes successfully.
 
-Once the new identity is received by the agent, it will store its state, indicating it is under a rotation event, and the new identity in the secret. The state under `/states/{role}/state` and the identity under `/ids/{role}/replacement`. This is mandatory so the pod, after restart, can resume the operation if not finished yet. If the process fails, the state is rewritten in order to inform the rotation has finished. Otherwise, if the process finishes successfully the process will replace the identity under `/states/{role}/current` with the new identity and replace the state content.
+Once the new identity is received by the agent, it will store its state, indicating it is under a rotation event, and the new identity in the storage. The state under `/states/{role}/state` key and the identity under `/ids/{role}/replacement`. This is mandatory so the agent, after restart, can resume the operation if not finished yet or rollback. If the process fails, the state is rewritten in order to inform the rotation has finished. Otherwise, if the process finishes successfully the process will replace the identity under `/states/{role}/current` with the new identity and replace the state content.
+
+Switching from local to Kubernetes Secret storage will not change the behavior, it just changes the storage location and storage structure.  
 
 ### Upgrade from PRE-RFD versions
 
