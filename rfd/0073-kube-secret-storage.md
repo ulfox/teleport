@@ -29,7 +29,7 @@ One way to overcome this problem is to use Persistent Volumes. PV is a Kubernete
 
 Another possibility is that the agent might use the invite token each time the pod is recycled, meaning that it issues a join request to the cluster every time it starts and receives a new identity from the Auth service. This means that the invite token must be a static/long-lived token, otherwise after a while the agent could not register himself in the cluster because the invite token expired. This approach is not recommended and might cause security flaws because the join token can be stolen or guessed.
 
-One solution that might address all the issues referenced above is to allow the agent to use Kubernetes secrets as storage backend. This allows not only that the agent is able to run stateless depending only on native objects generally available in any Kubernetes cluster, but also that the agent might support dynamic short-lived invite tokens with no dependency on external storage.
+One solution that might address all the issues referenced above is to allow the agent to use Kubernetes secrets as storage backend for process state. This allows not only that the agent is able to run stateless depending only on native objects generally available in any Kubernetes cluster, but also that the agent might support dynamic short-lived invite tokens with no dependency on external storage.
 
 ## Details
 
