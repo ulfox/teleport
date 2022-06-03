@@ -2909,6 +2909,8 @@ message GithubClaims {
 }
 
 // TeamMapping represents a single team membership mapping.
+//
+// REMOVE IN: 11.0.0
 message TeamMapping {
     // Organization is a Github organization a user belongs to.
     string Organization = 1 [ (gogoproto.jsontag) = "organization" ];
@@ -2923,8 +2925,6 @@ message TeamMapping {
 }
 
 // TeamRolesMapping represents a single team membership mapping.
-//
-// REMOVE IN: 11.0.0
 message TeamRolesMapping {
     // Organization is a Github organization a user belongs to.
     string Organization = 1 [ (gogoproto.jsontag) = "organization" ];
