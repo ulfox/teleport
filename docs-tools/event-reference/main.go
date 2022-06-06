@@ -5,17 +5,15 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/token"
+	"io/fs"
 	"os"
+	"path"
+	"path/filepath"
+	"strings"
 	"sync"
-)
 
-// Top-level directories for source code where EmitAuditEvent is called
-var pkg = []string{
-	"api",
-	"e",
-	"integration",
-	"lib",
-}
+	"golang.org/x/tools/go/ast/astutil"
+)
 
 type AuditEventEmitCollection struct {
 	Calls []*ast.CallExpr
@@ -31,22 +29,26 @@ func (a *AuditEventEmitCollection) addEmitCall(c *ast.CallExpr) {
 // TODO: Use astutil.Apply
 
 func main() {
-	fs := token.NewFileSet()
-	for _, p := range pkg {
-		a, err := parser.ParseDir(fs, p, nil, 0)
-		if err != nil {
-			// TODO: Replace with proper logger call
-			fmt.Fprintf(os.Stderr, "error parsing Go source files: %v", err)
-			os.Exit(1)
-		}
-
-		for _, c := range a {
-			for _, f := range c.Files {
-				for _, d := range f.Decls {
-					// TODO: Call the astutil.Apply function apply function (https://pkg.go.dev/golang.org/x/tools/go/ast/astutil#Apply)
-					// find EmitAuditEvent calls and do something with them
-				}
+	s := token.NewFileSet()
+	filepath.Walk(path.Join("..", ".."), func(pth string, i fs.FileInfo, err error) error {
+		if strings.HasSuffix(i.Name(), ".go") {
+			f, err := parser.ParseFile(s, pth, nil, 0)
+			for _, d := range f.Decls {
+				astutil.Apply(d, func(c *astutil.Cursor) bool {
+					if i, ok := c.Node().(*ast.Ident); ok && i.Name == "EmitAuditEvent" {
+						// TODO: Figure out what "i" indicates within the source, and how to get
+						// the Metadata of the argument to EmitAuditEvent
+						fmt.Printf("this is an ident: %v\n", i)
+					}
+					return true
+				}, nil)
+			}
+			if err != nil {
+				// TODO: Replace with proper logger call
+				fmt.Fprintf(os.Stderr, "error parsing Go source files: %v", err)
+				os.Exit(1)
 			}
 		}
-	}
+		return nil
+	})
 }
