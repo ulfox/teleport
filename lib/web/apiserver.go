@@ -2071,7 +2071,7 @@ func (h *Handler) siteSessionGenerate(w http.ResponseWriter, r *http.Request, p 
 }
 
 type siteSessionsGetResponse struct {
-	Sessions []session.Session `json:"sessions"`
+	Sessions []session.Session `json:"trackers"`
 }
 
 // siteSessionGet gets the list of site sessions filtered by creation time
