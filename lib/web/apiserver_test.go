@@ -1476,63 +1476,45 @@ func TestActiveSessions(t *testing.T) {
 	require.Equal(t, s.server.ClusterName(), sess.ClusterName)
 }
 
-// DELETE IN: 5.0.0
-// Tests the code snippet from apiserver.(*Handler).siteSessionGet/siteSessionsGet
-// that tests empty ClusterName and ServerHostname gets set.
-func TestEmptySessionClusterHostnameIsSet(t *testing.T) {
+func TestActiveTrackers(t *testing.T) {
 	t.Parallel()
 	s := newWebSuite(t)
-	nodeClient, err := s.server.NewClient(auth.TestBuiltin(types.RoleNode))
+	sid := session.NewID()
+	pack := s.authPack(t, "foo")
+
+	ws, err := s.makeTerminal(t, pack, sid)
+	require.NoError(t, err)
+	t.Cleanup(func() { require.NoError(t, ws.Close()) })
+
+	termHandler := newTerminalHandler()
+	stream := termHandler.asTerminalStream(ws)
+
+	// To make sure we have a session.
+	_, err = io.WriteString(stream, "echo vinsong\r\n")
 	require.NoError(t, err)
 
-	// Create a session with empty ClusterName.
-	sess1 := session.Session{
-		ClusterName:    "",
-		ServerID:       string(session.NewID()),
-		ID:             session.NewID(),
-		Namespace:      apidefaults.Namespace,
-		Login:          "foo",
-		Created:        time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC),
-		LastActive:     time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC),
-		TerminalParams: session.TerminalParams{W: 100, H: 100},
-	}
-	err = nodeClient.CreateSession(sess1)
+	// Make sure server has replied.
+	err = waitForOutput(stream, "vinsong")
 	require.NoError(t, err)
 
-	// Retrieve the session with the empty ClusterName.
-	pack := s.authPack(t, "baz")
-	res, err := pack.clt.Get(s.ctx, pack.clt.Endpoint("webapi", "sites", s.server.ClusterName(), "sessions", sess1.ID.String()), url.Values{})
-	require.NoError(t, err)
+	// Make sure this tracker appears in the list of active trackers.
+	var sessResp *siteTrackersGetResponse
+	require.Eventually(t, func() bool {
+		re, err := pack.clt.Get(s.ctx, pack.clt.Endpoint("webapi", "sites", s.server.ClusterName(), "trackers"), url.Values{})
+		require.NoError(t, err)
+		require.NoError(t, json.Unmarshal(re.Bytes(), &sessResp))
+		return len(sessResp.Trackers) == 1
+	}, time.Second*15, time.Millisecond*250)
 
-	// Test that empty ClusterName and ServerHostname got set.
-	var sessionResult *session.Session
-	err = json.Unmarshal(res.Bytes(), &sessionResult)
-	require.NoError(t, err)
-	require.Equal(t, s.server.ClusterName(), sessionResult.ClusterName)
-	require.Equal(t, sess1.ServerID, sessionResult.ServerHostname)
-
-	// Create another session to test sessions list.
-	sess2 := sess1
-	sess2.ID = session.NewID()
-	sess2.ServerID = string(session.NewID())
-	err = nodeClient.CreateSession(sess2)
-	require.NoError(t, err)
-
-	// Retrieve sessions list.
-	res, err = pack.clt.Get(s.ctx, pack.clt.Endpoint("webapi", "sites", s.server.ClusterName(), "sessions"), url.Values{})
-	require.NoError(t, err)
-
-	var sessionList *siteSessionsGetResponse
-	err = json.Unmarshal(res.Bytes(), &sessionList)
-	require.NoError(t, err)
-
-	s1 := sessionList.Sessions[0]
-	s2 := sessionList.Sessions[1]
-
-	require.Equal(t, s.server.ClusterName(), s1.ClusterName)
-	require.Equal(t, s.server.ClusterName(), s2.ClusterName)
-	require.Equal(t, s1.ServerID, s1.ServerHostname)
-	require.Equal(t, s2.ServerID, s2.ServerHostname)
+	require.Len(t, sessResp.Trackers, 1)
+	tracker := sessResp.Trackers[0]
+	require.Equal(t, s.node.GetNamespace(), tracker.GetMetadata().Namespace)
+	require.Greater(t, len(tracker.Spec.Participants), 0)
+	require.Equal(t, pack.login, tracker.GetLogin())
+	require.False(t, tracker.GetCreated().IsZero())
+	require.False(t, tracker.GetParticipants()[0].LastActive.IsZero())
+	require.Equal(t, s.node.GetInfo().GetHostname(), tracker.GetHostname())
+	require.Equal(t, s.server.ClusterName(), tracker.GetClusterName())
 }
 
 func TestCloseConnectionsOnLogout(t *testing.T) {

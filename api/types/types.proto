@@ -55,9 +55,8 @@ message KeepAlive {
 message Metadata {
     // Name is an object name
     string Name = 1 [ (gogoproto.jsontag) = "name" ];
-    // Namespace is object namespace. The field should be called "namespace"
-    // when it returns in Teleport 2.4.
-    string Namespace = 2 [ (gogoproto.jsontag) = "-" ];
+    // Namespace is object namespace.
+    string Namespace = 2 [ (gogoproto.jsontag) = "namespace" ];
     // Description is object description
     string Description = 3 [ (gogoproto.jsontag) = "description,omitempty" ];
     // Labels is a set of labels

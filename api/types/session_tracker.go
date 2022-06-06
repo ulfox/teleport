@@ -112,7 +112,8 @@ func NewSessionTracker(spec SessionTrackerSpecV1) (SessionTracker, error) {
 	session := &SessionTrackerV1{
 		ResourceHeader: ResourceHeader{
 			Metadata: Metadata{
-				Name: spec.SessionID,
+				Namespace: defaults.Namespace,
+				Name:      spec.SessionID,
 			},
 		},
 		Spec: spec,
