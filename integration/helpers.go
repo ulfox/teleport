@@ -36,9 +36,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gravitational/teleport/api/breaker"
 	"golang.org/x/crypto/ssh"
 	"golang.org/x/crypto/ssh/agent"
+
+	"github.com/gravitational/teleport/api/breaker"
+	"github.com/gravitational/teleport/lib/observability/tracing"
 
 	"github.com/stretchr/testify/require"
 
@@ -424,7 +426,7 @@ func SetupUserCreds(tc *client.TeleportClient, proxyHost string, creds UserCreds
 	if err != nil {
 		return trace.Wrap(err)
 	}
-	err = tc.AddTrustedCA(creds.HostCA)
+	err = tc.AddTrustedCA(context.Background(), creds.HostCA)
 	if err != nil {
 		return trace.Wrap(err)
 	}
@@ -1320,6 +1322,7 @@ func (i *TeleInstance) NewUnauthenticatedClient(cfg ClientConfig) (tc *client.Te
 		SSHProxyAddr:       sshProxyAddr,
 		Interactive:        cfg.Interactive,
 		TLSRoutingEnabled:  i.isSinglePortSetup,
+		Tracer:             tracing.NoopProvider().Tracer("test"),
 	}
 
 	// JumpHost turns on jump host mode
@@ -1361,7 +1364,7 @@ func (i *TeleInstance) NewClient(cfg ClientConfig) (*client.TeleportClient, erro
 		return nil, trace.Wrap(err)
 	}
 	for _, ca := range cas {
-		err = tc.AddTrustedCA(ca)
+		err = tc.AddTrustedCA(context.Background(), ca)
 		if err != nil {
 			return nil, trace.Wrap(err)
 		}
