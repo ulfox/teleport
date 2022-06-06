@@ -129,6 +129,13 @@ func (l *FileLog) EmitAuditEvent(ctx context.Context, event apievents.AuditEvent
 	l.rw.RLock()
 	defer l.rw.RUnlock()
 
+	// file == nil either means we were never able to open the file
+	// or the audit log has already been closed
+	if l.file == nil {
+		return trace.NotFound(
+			"file log is not found due to permission or disk issue")
+	}
+
 	// see if the log needs to be rotated
 	if l.mightNeedRotation() {
 		// log might need rotation; switch to write-lock
@@ -153,10 +160,6 @@ func (l *FileLog) EmitAuditEvent(ctx context.Context, event apievents.AuditEvent
 	line, err := utils.FastMarshal(event)
 	if err != nil {
 		return trace.Wrap(err)
-	}
-	if l.file == nil {
-		return trace.NotFound(
-			"file log is not found due to permission or disk issue")
 	}
 
 	if len(line) > l.MaxScanTokenSize {
