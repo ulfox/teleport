@@ -343,6 +343,8 @@ func NewHandler(cfg Config, opts ...HandlerOption) (*APIHandler, error) {
 	h.GET("/webapi/sites/:site/sessions", h.WithClusterAuth(h.siteSessionsGet))      // get active list of sessions
 	h.POST("/webapi/sites/:site/sessions", h.WithClusterAuth(h.siteSessionGenerate)) // create active session metadata
 	h.GET("/webapi/sites/:site/sessions/:sid", h.WithClusterAuth(h.siteSessionGet))  // get active session metadata
+	h.GET("/webapi/sites/:site/trackers", h.WithClusterAuth(h.siteTrackersGet))      // get active list of trackers
+	h.GET("/webapi/sites/:site/trackers/:tid", h.WithClusterAuth(h.siteTrackerGet))  // get a session tracker by ID
 
 	// Audit events handlers.
 	h.GET("/webapi/sites/:site/events/search", h.WithClusterAuth(h.clusterSearchEvents))                 // search site events
@@ -2080,6 +2082,8 @@ type siteSessionsGetResponse struct {
 // Response body:
 //
 // {"sessions": [{"id": "sid", "terminal_params": {"w": 100, "h": 100}, "parties": [], "login": "bob"}, ...] }
+//
+// DELETE IN: 12.0.0, replaced by siteTrackersGet
 func (h *Handler) siteSessionsGet(w http.ResponseWriter, r *http.Request, p httprouter.Params, ctx *SessionContext, site reversetunnel.RemoteSite) (interface{}, error) {
 	clt, err := ctx.GetUserClient(site)
 	if err != nil {
@@ -2107,6 +2111,36 @@ func (h *Handler) siteSessionsGet(w http.ResponseWriter, r *http.Request, p http
 	return siteSessionsGetResponse{Sessions: sessions}, nil
 }
 
+type siteTrackersGetResponse struct {
+	Trackers []*types.SessionTrackerV1 `json:"sessions"`
+}
+
+// siteTrackersGet gets the list of active site session trackers.
+//
+// GET /v1/webapi/sites/:site/namespaces/:namespace/trackers
+func (h *Handler) siteTrackersGet(w http.ResponseWriter, r *http.Request, p httprouter.Params, ctx *SessionContext, site reversetunnel.RemoteSite) (interface{}, error) {
+	clt, err := ctx.GetUserClient(site)
+	if err != nil {
+		return nil, trace.Wrap(err)
+	}
+
+	items, err := clt.GetActiveSessionTrackers(r.Context())
+	if err != nil {
+		return nil, trace.Wrap(err)
+	}
+
+	trackers := make([]*types.SessionTrackerV1, len(items))
+	for i, tracker := range items {
+		var ok bool
+		trackers[i], ok = tracker.(*types.SessionTrackerV1)
+		if !ok {
+			return nil, trace.BadParameter("unexpected tracker type")
+		}
+	}
+
+	return siteTrackersGetResponse{Trackers: trackers}, nil
+}
+
 // siteSessionGet gets the list of site session by id
 //
 // GET /v1/webapi/sites/:site/namespaces/:namespace/sessions/:sid
@@ -2115,6 +2149,7 @@ func (h *Handler) siteSessionsGet(w http.ResponseWriter, r *http.Request, p http
 //
 // {"session": {"id": "sid", "terminal_params": {"w": 100, "h": 100}, "parties": [], "login": "bob"}}
 //
+// DELETE IN: 12.0.0, replaced by siteTrackerGet
 func (h *Handler) siteSessionGet(w http.ResponseWriter, r *http.Request, p httprouter.Params, ctx *SessionContext, site reversetunnel.RemoteSite) (interface{}, error) {
 	sessionID, err := session.ParseID(p.ByName("sid"))
 	if err != nil {
@@ -2143,6 +2178,33 @@ func (h *Handler) siteSessionGet(w http.ResponseWriter, r *http.Request, p httpr
 	}
 
 	return *sess, nil
+}
+
+// siteTrackerGet gets a session tracker by ID.
+//
+// GET /webapi/sites/:site/namespaces/:namespace/trackers/:tid
+func (h *Handler) siteTrackerGet(w http.ResponseWriter, r *http.Request, p httprouter.Params, ctx *SessionContext, site reversetunnel.RemoteSite) (interface{}, error) {
+	trackerID, err := session.ParseID(p.ByName("tid"))
+	if err != nil {
+		return nil, trace.Wrap(err)
+	}
+
+	clt, err := ctx.GetUserClient(site)
+	if err != nil {
+		return nil, trace.Wrap(err)
+	}
+
+	item, err := clt.GetSessionTracker(r.Context(), trackerID.String())
+	if err != nil {
+		return nil, trace.Wrap(err)
+	}
+
+	tracker, ok := item.(*types.SessionTrackerV1)
+	if !ok {
+		return nil, trace.BadParameter("unexpected tracker type")
+	}
+
+	return tracker, nil
 }
 
 const maxStreamBytes = 5 * 1024 * 1024
