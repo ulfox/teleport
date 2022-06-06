@@ -75,7 +75,7 @@ data:
   auth-token: ${TELEPORT_KUBE_TOKEN?}
 EOF
 
-$ kubectl apply -f secret.yaml
+$ kubectl apply -f secrets.yaml
 
 $ helm install teleport-kube-agent . \
   --create-namespace \
