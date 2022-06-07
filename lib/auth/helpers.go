@@ -215,6 +215,7 @@ func NewTestAuthServer(cfg TestAuthServerConfig) (*TestAuthServer, error) {
 		ServerID:      cfg.ClusterName,
 		Clock:         cfg.Clock,
 		UploadHandler: events.NewMemoryUploader(),
+		ExternalLog:   events.NewDiscardAuditLog(),
 	})
 	if err != nil {
 		return nil, trace.Wrap(err)
