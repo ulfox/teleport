@@ -21,6 +21,7 @@ import (
 	"sync"
 
 	"github.com/gravitational/teleport/api/types/events"
+	libevents "github.com/gravitational/teleport/lib/events"
 	"github.com/gravitational/teleport/lib/session"
 )
 
@@ -87,4 +88,35 @@ func (e *MockEmitter) Close(ctx context.Context) error {
 
 func (e *MockEmitter) Complete(ctx context.Context) error {
 	return nil
+}
+
+// MockAuditLog is an IAuditLog implementation that captures
+// all events in memory.
+type MockAuditLog struct {
+	libevents.DiscardAuditLog
+
+	emitter MockEmitter
+}
+
+func (m *MockAuditLog) StreamSessionEvents(ctx context.Context, sid session.ID, startIndex int64) (chan events.AuditEvent, chan error) {
+	errors := make(chan error, 1)
+	events := make(chan events.AuditEvent)
+
+	go func() {
+		defer close(events)
+
+		for _, event := range m.emitter.Events() {
+			select {
+			case <-ctx.Done():
+				return
+			case events <- event:
+			}
+		}
+	}()
+
+	return events, errors
+}
+
+func (m *MockAuditLog) EmitAuditEvent(ctx context.Context, event events.AuditEvent) error {
+	return m.emitter.EmitAuditEvent(ctx, event)
 }

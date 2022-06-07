@@ -41,7 +41,7 @@ func TestUploadCompleterCompletesAbandonedUploads(t *testing.T) {
 	mu := NewMemoryUploader()
 	mu.Clock = clock
 
-	log := &mockAuditLog{}
+	log := &eventstest.MockAuditLog{}
 
 	sessionID := session.NewID()
 	expires := clock.Now().Add(time.Hour * 1)
@@ -184,36 +184,6 @@ func TestUploadCompleterEmitsSessionEnd(t *testing.T) {
 			require.Equal(t, test.endEventType, log.emitter.Events()[1].GetType())
 		})
 	}
-}
-
-type mockAuditLog struct {
-	DiscardAuditLog
-
-	emitter       eventstest.MockEmitter
-	sessionEvents []apievents.AuditEvent
-}
-
-func (m *mockAuditLog) StreamSessionEvents(ctx context.Context, sid session.ID, startIndex int64) (chan apievents.AuditEvent, chan error) {
-	errors := make(chan error, 1)
-	events := make(chan apievents.AuditEvent)
-
-	go func() {
-		defer close(events)
-
-		for _, event := range m.sessionEvents {
-			select {
-			case <-ctx.Done():
-				return
-			case events <- event:
-			}
-		}
-	}()
-
-	return events, errors
-}
-
-func (m *mockAuditLog) EmitAuditEvent(ctx context.Context, event apievents.AuditEvent) error {
-	return m.emitter.EmitAuditEvent(ctx, event)
 }
 
 type mockSessionTrackerService struct {

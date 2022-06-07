@@ -39,6 +39,7 @@ import (
 	"github.com/gravitational/teleport/lib/backend/memory"
 	"github.com/gravitational/teleport/lib/defaults"
 	"github.com/gravitational/teleport/lib/events"
+	"github.com/gravitational/teleport/lib/events/eventstest"
 	"github.com/gravitational/teleport/lib/limiter"
 	"github.com/gravitational/teleport/lib/services"
 	"github.com/gravitational/teleport/lib/services/local"
@@ -215,7 +216,7 @@ func NewTestAuthServer(cfg TestAuthServerConfig) (*TestAuthServer, error) {
 		ServerID:      cfg.ClusterName,
 		Clock:         cfg.Clock,
 		UploadHandler: events.NewMemoryUploader(),
-		ExternalLog:   events.NewDiscardAuditLog(),
+		ExternalLog:   &eventstest.MockEmitter{},
 	})
 	if err != nil {
 		return nil, trace.Wrap(err)
