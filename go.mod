@@ -131,7 +131,7 @@ require (
 	golang.org/x/term v0.3.0
 	golang.org/x/text v0.5.0
 	golang.org/x/tools v0.4.0
-	google.golang.org/api v0.103.0
+	google.golang.org/api v0.107.0
 	google.golang.org/grpc v1.51.0
 	google.golang.org/grpc/examples v0.0.0-20221010194801-c67245195065
 	google.golang.org/protobuf v1.28.1
@@ -157,8 +157,8 @@ require (
 // DO NOT UPDATE genproto without first updating firestore to 1.9.0
 // and fixing the deprecation of the Batch api in firestore 1.7.0.
 require (
-	cloud.google.com/go/firestore v1.6.1
-	google.golang.org/genproto v0.0.0-20221201164419-0e50fba7f41c
+	cloud.google.com/go/firestore v1.9.0
+	google.golang.org/genproto v0.0.0-20221227171554-f9683d7f8bef
 )
 
 // DO NOT UPDATE crypto beyond v0.2.0, the commit below breaks compatibility
@@ -174,13 +174,10 @@ require (
 	github.com/mailgun/minheap v0.0.0-20170619185613-3dbe6c6bf55f // indirect
 )
 
-// Do not remove. It breaks github.com/gravitational/go-oidc.
-require github.com/coreos/pkg v0.0.0-20180928190104-399ea9e2e55f // indirect
-
 require (
 	cloud.google.com/go v0.105.0 // indirect
-	cloud.google.com/go/compute v1.13.0 // indirect
-	cloud.google.com/go/compute/metadata v0.2.1 // indirect
+	cloud.google.com/go/compute v1.14.0 // indirect
+	cloud.google.com/go/compute/metadata v0.2.3 // indirect
 	cloud.google.com/go/longrunning v0.3.0 // indirect
 	cloud.google.com/go/pubsub v1.27.1 // indirect
 	github.com/99designs/go-keychain v0.0.0-20191008050251-8e49817e8af4 // indirect
@@ -255,7 +252,7 @@ require (
 	github.com/google/go-tpm v0.3.3 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/google/renameio/v2 v2.0.0 // indirect
-	github.com/googleapis/enterprise-certificate-proxy v0.2.0 // indirect
+	github.com/googleapis/enterprise-certificate-proxy v0.2.1 // indirect
 	github.com/gorilla/handlers v1.5.1 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/gregjones/httpcache v0.0.0-20180305231024-9cad4c3443a7 // indirect
