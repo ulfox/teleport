@@ -52,7 +52,7 @@ require (
 	github.com/go-mysql-org/go-mysql v1.5.0 // replaced
 	github.com/go-piv/piv-go v1.10.0
 	github.com/go-redis/redis/v9 v9.0.0-rc.1 // replaced
-	github.com/go-webauthn/webauthn v0.5.0
+	github.com/go-webauthn/webauthn v0.7.0
 	github.com/gobuffalo/flect v0.3.0
 	github.com/gocql/gocql v1.3.0
 	github.com/gofrs/flock v0.8.1
@@ -124,12 +124,12 @@ require (
 	go.opentelemetry.io/proto/otlp v0.19.0
 	golang.org/x/exp v0.0.0-20221126150942-6ab00d035af9
 	golang.org/x/mod v0.7.0
-	golang.org/x/net v0.4.0
+	golang.org/x/net v0.5.0
 	golang.org/x/oauth2 v0.3.0
 	golang.org/x/sync v0.1.0
-	golang.org/x/sys v0.3.0
-	golang.org/x/term v0.3.0
-	golang.org/x/text v0.5.0
+	golang.org/x/sys v0.4.0
+	golang.org/x/term v0.4.0
+	golang.org/x/text v0.6.0
 	golang.org/x/tools v0.4.0
 	google.golang.org/api v0.103.0
 	google.golang.org/grpc v1.51.0
@@ -165,7 +165,7 @@ require (
 // with OpenSSH <= 7.6.
 // We are working on landing a patch upstream.
 // https://github.com/golang/crypto/commit/6fad3dfc18918c2ac9c112e46b32473bd2e5e2f9
-require golang.org/x/crypto v0.2.0 // DO NOT UPDATE
+require golang.org/x/crypto v0.5.0 // DO NOT UPDATE
 
 // Indirect mailgun dependencies.
 // Updating causes breaking changes.
@@ -173,9 +173,6 @@ require (
 	github.com/mailgun/metrics v0.0.0-20150124003306-2b3c4565aafd // indirect
 	github.com/mailgun/minheap v0.0.0-20170619185613-3dbe6c6bf55f // indirect
 )
-
-// Do not remove. It breaks github.com/gravitational/go-oidc.
-require github.com/coreos/pkg v0.0.0-20180928190104-399ea9e2e55f // indirect
 
 require (
 	cloud.google.com/go v0.105.0 // indirect
