@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/Masterminds/sprig/v3 v3.2.3
 	github.com/alecthomas/kingpin/v2 v2.3.2 // replaced
-	github.com/bmatcuk/doublestar/v4 v4.6.0
+	github.com/bmatcuk/doublestar/v4 v4.6.1
 	github.com/bradleyfalzon/ghinstallation/v2 v2.7.0
 	github.com/gogo/protobuf v1.3.2
 	github.com/google/go-github/v41 v41.0.0
