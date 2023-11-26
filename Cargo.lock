@@ -714,9 +714,9 @@ dependencies = [
 
 [[package]]
 name = "iso7816"
-version = "0.1.1"
+version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e7e6ac743d509349b7865595ce90bbfcfbe59f42b8ec0db9e76ec361ace3f652"
+checksum = "b3af73ac9c821e7aea3280532118e15cdf9e7bb45c923cbf0e319ae25b27d20c"
 dependencies = [
  "delog",
  "heapless",
